@@ -1,4 +1,4 @@
-# TransferMarkt Web Scrapping
+# TransferMarkt Web Scraping
 
 A simple Python app that downloads info from transfermarkt and saves it into a json file.
 

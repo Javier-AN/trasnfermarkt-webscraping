@@ -29,24 +29,13 @@ class TransferMarket:
                 rows = self.get_rows_from_link("/wettbewerbe/europa?ajax=yw1&page=" + str(i))
 
                 for row in rows:
-                    if 'colspan' in row.td.attrs:
-                        if row.td.text.strip() == "Segunda División":
-                            first_tier = False
-                    elif first_tier:
+                    if 'colspan' not in row.td.attrs:
                         res = self.get_league_info(row)
-                        if res:
+                        if res and len(res) > 4 and res[4] > 80000:
                             leagues[res[0]] = {}
                             leagues[res[0]]['name'] = res[1]
                             leagues[res[0]]['link'] = res[2]
                             total_teams += res[3]
-                    else:
-                        res = self.get_league_info(row)
-                        if res and res[1] == "LaLiga2":
-                            leagues[res[0]] = {}
-                            leagues[res[0]]['name'] = res[1]
-                            leagues[res[0]]['link'] = res[2]
-                            total_teams += res[3]
-                            break
 
         self.timer = Timer(total_teams)
         return leagues
@@ -61,7 +50,14 @@ class TransferMarket:
         id_league = aux[4]
         td_elements = row.find_all('td', recursive=False)
         n_teams = int(td_elements[2].text.strip())
-        return id_league, name, link, n_teams
+        # Get the value of the league
+        txt_value = td_elements[7].text.strip()
+        value = int(txt_value[:txt_value.find(',')])
+        if "mil millones" in txt_value:
+            value *= 1000000
+        elif "mill." in txt_value:
+            value *= 1000
+        return id_league, name, link, n_teams, value
 
     def get_teams(self, leagues):
         for id_league in leagues:
@@ -123,6 +119,7 @@ if __name__ == "__main__":
     print("Obtaining leagues...")
     leagues = tm.get_leagues()
     print("Leagues obtained!")
+
     print("Getting team and player data from each league...")
     teams = tm.get_teams(leagues)
     print("All info downloaded, saving it...")
