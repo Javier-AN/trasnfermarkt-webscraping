@@ -1,4 +1,4 @@
-from json import dump
+import json
 from timer import Timer
 from webscraper import WebScraper as WebScr
 
@@ -24,18 +24,18 @@ class TransferMarket:
         leagues = {}
         total_teams = 0
         first_tier = True
-        for i in range(1, 4):
+        for i in range(1, 7):
             if first_tier:
                 rows = self.get_rows_from_link("/wettbewerbe/europa?ajax=yw1&page=" + str(i))
 
                 for row in rows:
                     if 'colspan' not in row.td.attrs:
                         res = self.get_league_info(row)
-                        if res and len(res) > 4 and res[4] > 80000:
-                            leagues[res[0]] = {}
-                            leagues[res[0]]['name'] = res[1]
-                            leagues[res[0]]['link'] = res[2]
-                            total_teams += res[3]
+                        if res and res['value'] > 80000 or res['country'] == "España":
+                            leagues[res['id']] = {}
+                            leagues[res['id']]['name'] = res['name']
+                            leagues[res['id']]['link'] = res['link']
+                            total_teams += res['n_teams']
 
         self.timer = Timer(total_teams)
         return leagues
@@ -44,20 +44,37 @@ class TransferMarket:
     def get_league_info(row):
         a_elements = row.find_all('a')
         a = a_elements[1]
+        td_elements = row.find_all('td', recursive=False)
+
+        # Name
         name = a.text.strip()
+        # Link
         link = a['href']
+        # Id
         aux = link.split('/')
         id_league = aux[4]
-        td_elements = row.find_all('td', recursive=False)
+        # Country
+        country = td_elements[1].img['title'].strip()
+        # Number of teams
         n_teams = int(td_elements[2].text.strip())
-        # Get the value of the league
+        # Value
         txt_value = td_elements[7].text.strip()
-        value = int(txt_value[:txt_value.find(',')])
+        separator = txt_value.find(',') if (',' in txt_value) else txt_value.find(' ')
+        value = int(txt_value[:separator])
         if "mil millones" in txt_value:
             value *= 1000000
         elif "mill." in txt_value:
             value *= 1000
-        return id_league, name, link, n_teams, value
+
+        league = {
+            'id': id_league,
+            'name': name,
+            'link': link,
+            'country': country,
+            'n_teams': n_teams,
+            'value': value
+        }
+        return league
 
     def get_teams(self, leagues):
         for id_league in leagues:
@@ -124,5 +141,5 @@ if __name__ == "__main__":
     teams = tm.get_teams(leagues)
     print("All info downloaded, saving it...")
     with open('output.json', 'w') as f:
-        dump(leagues, f, indent=4, sort_keys=True)
+        json.dump(leagues, f, indent=4, sort_keys=True)
     print("Done!")
