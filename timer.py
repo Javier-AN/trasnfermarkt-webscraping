@@ -12,6 +12,10 @@ class Timer:
         self.total = total
         self.left = total
 
+    def start(self):
+        self.init_time = datetime.timestamp(datetime.now())
+        self.curr_time = self.init_time
+
     def add_done(self):
         self.done += 1
         self.left = self.total - self.done
@@ -30,5 +34,6 @@ class Timer:
     def get_formatted_items_left(self):
         return "{}/{}".format(self.done, self.total)
 
-    def print_left(self):
-        print("{}\tleft\t|\t{}\tdone".format(self.get_formatted_time_left(), self.get_formatted_items_left()))
+    def print_left(self, new_line=True):
+        print("{}\tleft\t|\t{}\tdone".format(self.get_formatted_time_left(), self.get_formatted_items_left()),
+              end=('\n' if new_line else '\r'), flush=True)
