@@ -1,6 +1,9 @@
 import json
 from timer import Timer
 from webscraper import WebScraper as WebScr
+import logging
+
+logging.basicConfig(filename="debug.txt", level=logging.INFO)
 
 
 class TransferMarkt:
@@ -170,13 +173,7 @@ class TransferMarkt:
             elif row.th.text.strip() == "3er club:":
                 team_3 = row.td.a['id']
                 player['team_3'] = team_3
-                print("###########################################################################################")
-                print("###########################################################################################")
-                print("###########################################################################################")
-                print("TIENE 3 CLUBES! - " + player['link'])
-                print("###########################################################################################")
-                print("###########################################################################################")
-                print("###########################################################################################")
+                logging.warning("Player with 3 clubs: {}".format(player['link']))
 
         return player
 
@@ -189,7 +186,7 @@ class TransferMarkt:
 
 if __name__ == "__main__":
     force_include = [
-        'GB1', 'L1', 'IT1', 'FR1', 'RU1', 'NL1', 'PO1', 'AZ1', 'KR1', 'RO1', 'SE1', 'SER1', 'WER1',
+        'GB1', 'L1', 'IT1', 'FR1', 'RU1', 'NL1', 'PO1', 'AZ1', 'KR1', 'RO1', 'SE1', 'SER1', 'WER1', 'MO1N',
         'GB2', 'L2', 'IT2', 'FR2', 'RU2', 'NL2', 'PO2',
         'GB3', 'L3',
         'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D',
@@ -197,7 +194,7 @@ if __name__ == "__main__":
 
     tm = TransferMarkt()
     print("Obtaining leagues and teams...")
-    tm.get_leagues(800000000, force_include)
+    tm.get_leagues(80000, force_include)
     print("Leagues and teams obtained!")
 
     print("Getting player data...")

@@ -34,6 +34,6 @@ class Timer:
     def get_formatted_items_left(self):
         return "{}/{}".format(self.done, self.total)
 
-    def print_left(self, new_line=True):
+    def print_left(self, new_line=False):
         print("{}\tleft\t|\t{}\tdone".format(self.get_formatted_time_left(), self.get_formatted_items_left()),
               end=('\n' if new_line else '\r'), flush=True)
