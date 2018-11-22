@@ -190,6 +190,7 @@ if __name__ == "__main__":
         'GB2', 'L2', 'IT2', 'FR2', 'RU2', 'NL2', 'PO2',
         'GB3', 'L3',
         'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D',
+        'AR1N', 'URU1', 'URUC',
     ]
 
     tm = TransferMarkt()
