@@ -95,9 +95,9 @@ class TransferMarkt:
         return teams
 
     def iterate_teams(self, extra_team_info=True, players=True, extra_player_info=True):
+        self.timer.start()
         for id_league in self.leagues:
             teams = self.leagues[id_league]['teams']
-            self.timer.start()
             for id_team in teams:
                 team_link = teams[id_team]['link']
                 page = WebScr.get_soup(team_link)

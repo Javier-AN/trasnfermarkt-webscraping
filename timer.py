@@ -32,8 +32,8 @@ class Timer:
         return "{} min. {} sec.".format(str(m), str(s))
 
     def get_formatted_items_left(self):
-        return "{}/{}".format(self.done, self.total)
+        return "{:4}/{:4}".format(self.done, self.total)
 
     def print_left(self, new_line=False):
-        print("{}\tleft\t|\t{}\tdone".format(self.get_formatted_time_left(), self.get_formatted_items_left()),
+        print("{:6}\tleft\t|\t{}\tdone".format(self.get_formatted_time_left(), self.get_formatted_items_left()),
               end=('\n' if new_line else '\r'), flush=True)
