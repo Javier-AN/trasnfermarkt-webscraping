@@ -25,11 +25,15 @@ class TransferMarkt:
         table = page.find('table', {'class': class_name})
         return table.tbody.find_all('tr', recursive=False)
 
-    def get_leagues(self, min_value=80000, force_include=None, page_num=7):
+    def get_leagues(self, min_value=80000, force_include=None, page_num=7, additional_pages=None):
         total_teams = 0
 
+        pages = additional_pages if isinstance(additional_pages, list) else []
         for i in range(1, page_num):
-            rows = self.get_rows_from_link("/wettbewerbe/europa?ajax=yw1&page=" + str(i))
+            pages.append("/wettbewerbe/europa?ajax=yw1&page=" + str(i))
+
+        for p in pages:
+            rows = self.get_rows_from_link(p)
 
             for row in rows:
                 if 'colspan' not in row.td.attrs:
@@ -186,16 +190,16 @@ class TransferMarkt:
 
 if __name__ == "__main__":
     force_include = [
-        'GB1', 'L1', 'IT1', 'FR1', 'RU1', 'NL1', 'PO1', 'AZ1', 'KR1', 'RO1', 'SE1', 'SER1', 'WER1', 'MO1N',
-        'GB2', 'L2', 'IT2', 'FR2', 'RU2', 'NL2', 'PO2',
-        'GB3', 'L3',
-        'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D',
-        'AR1N', 'URU1', 'URUC',
+        'A1', 'AZ1', 'BE1', 'BU1', 'C1', 'DK1', 'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D', 'FR1', 'FR2',
+        'GB1', 'GB2', 'GB3', 'GR1', 'ISR1', 'IT1', 'IT2', 'KAS1', 'KR1', 'L1', 'L2', 'L3', 'MO1N', 'NL1', 'NL2', 'NO1',
+        'PL1', 'PO1', 'PO2', 'RO1', 'RU1', 'RU2', 'SC1', 'SE1', 'SER1', 'TR1', 'TR2', 'TS1', 'UKR1', 'UNG1', 'WER1',
+        'ZYP1'
     ]
+    additional_pages = ["/wettbewerbe/amerika"]
 
     tm = TransferMarkt()
     print("Obtaining leagues and teams...")
-    tm.get_leagues(80000, force_include)
+    tm.get_leagues(100000000, force_include, 7, additional_pages)
     print("Leagues and teams obtained!")
 
     print("Getting player data...")
