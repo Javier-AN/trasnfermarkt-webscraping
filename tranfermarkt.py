@@ -68,13 +68,14 @@ class TransferMarkt:
         # Number of teams
         n_teams = int(td_elements[2].text.strip())
         # Value
-        txt_value = td_elements[7].text.strip()
-        separator = txt_value.find(',') if (',' in txt_value) else txt_value.find(' ')
-        value = int(txt_value[:separator])
-        if "mil millones" in txt_value:
-            value *= 1000000
-        elif "mill." in txt_value:
-            value *= 1000
+        # txt_value = td_elements[7].text.strip()
+        # separator = txt_value.find(',') if (',' in txt_value) else txt_value.find(' ')
+        # value = int(txt_value[:separator])
+        # if "mil millones" in txt_value:
+        #     value *= 1000000
+        # elif "mill." in txt_value:
+        #     value *= 1000
+        value = 0
 
         league = {
             'id': id_league,
@@ -116,6 +117,9 @@ class TransferMarkt:
 
                 self.timer.add_done()
                 self.timer.print_left()
+            tmp_output = {'leagues': self.leagues, 'players': self.players}
+            with open('tmp_output/{}.json'.format(id_league), 'w') as f:
+                json.dump(tmp_output, f, indent=4, sort_keys=True)
 
     def get_players(self, team_page, id_league, extra_info=True):
         rows = TransferMarkt.get_rows_from_page(team_page)
@@ -190,9 +194,9 @@ class TransferMarkt:
 
 if __name__ == "__main__":
     force_include = [
-        'A1', 'AZ1', 'BE1', 'BU1', 'C1', 'DK1', 'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D', 'FR1', 'FR2',
+        'A1', 'AR1N', 'ARG2', 'AZ1', 'BE1', 'BU1', 'C1', 'DK1', 'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D', 'FR1', 'FR2',
         'GB1', 'GB2', 'GB3', 'GR1', 'ISR1', 'IT1', 'IT2', 'KAS1', 'KR1', 'L1', 'L2', 'L3', 'MO1N', 'NL1', 'NL2', 'NO1',
-        'PL1', 'PO1', 'PO2', 'RO1', 'RU1', 'RU2', 'SC1', 'SE1', 'SER1', 'TR1', 'TR2', 'TS1', 'UKR1', 'UNG1', 'WER1',
+        'PL1', 'PO1', 'PO2', 'RO1', 'RU1', 'RU2', 'SC1', 'SE1', 'SER1', 'TR1', 'TR2', 'TS1', 'UKR1', 'UNG1', 'URU1', 'WER1',
         'ZYP1'
     ]
     additional_pages = ["/wettbewerbe/amerika"]
