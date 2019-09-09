@@ -112,7 +112,9 @@ class TransferMarkt:
                     if img:
                         teams[id_team]['img'] = img['src'].replace("https", "http")
 
-                if players:
+                has_players = int(page.find("span", {"class": "dataValue"}).text.strip())
+
+                if players and has_players:
                     self.get_players(page, id_league, extra_player_info)
 
                 self.timer.add_done()
