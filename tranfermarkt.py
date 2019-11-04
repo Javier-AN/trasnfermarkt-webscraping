@@ -45,7 +45,8 @@ class TransferMarkt:
                         self.leagues[res['id']] = {}
                         self.leagues[res['id']]['name'] = res['name']
                         self.leagues[res['id']]['link'] = res['link']
-                        self.leagues[res['id']]['teams'] = self.get_teams(res['link'])
+                        self.leagues[res['id']]['teams'] = self.get_teams(
+                            res['link'])
                         total_teams += res['n_teams']
 
         self.timer = Timer(total_teams)
@@ -92,7 +93,8 @@ class TransferMarkt:
         teams = {}
         rows = TransferMarkt.get_rows_from_link(league_link)
         for row in rows:
-            aux = row.find('td', {'class': 'hauptlink no-border-links hide-for-small hide-for-pad'}).a
+            aux = row.find(
+                'td', {'class': 'hauptlink no-border-links hide-for-small hide-for-pad'}).a
             name = aux.text.strip()
             link = aux['href'].replace("startseite", "kader") + "/plus/1"
             id_team = link.split('/')[4]
@@ -110,9 +112,11 @@ class TransferMarkt:
                 if extra_team_info:
                     img = page.find('img', {'alt': teams[id_team]['name']})
                     if img:
-                        teams[id_team]['img'] = img['src'].replace("https", "http")
+                        teams[id_team]['img'] = img['src'].replace(
+                            "https", "http")
 
-                has_players = int(page.find("span", {"class": "dataValue"}).text.strip())
+                has_players = int(
+                    page.find("span", {"class": "dataValue"}).text.strip())
 
                 if players and has_players:
                     self.get_players(page, id_league, extra_player_info)
@@ -183,7 +187,8 @@ class TransferMarkt:
             elif row.th.text.strip() == "3er club:":
                 team_3 = row.td.a['id']
                 player['team_3'] = team_3
-                logging.warning("Player with 3 clubs: {}".format(player['link']))
+                logging.warning(
+                    "Player with 3 clubs: {}".format(player['link']))
 
         return player
 
@@ -196,12 +201,14 @@ class TransferMarkt:
 
 if __name__ == "__main__":
     force_include = [
-        'A1', 'AR1N', 'ARG2', 'AZ1', 'BE1', 'BU1', 'C1', 'DK1', 'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D', 'FR1', 'FR2',
-        'GB1', 'GB2', 'GB3', 'GR1', 'ISR1', 'IT1', 'IT2', 'KAS1', 'KR1', 'L1', 'L2', 'L3', 'MO1N', 'NL1', 'NL2', 'NO1',
-        'PL1', 'PO1', 'PO2', 'RO1', 'RU1', 'RU2', 'SC1', 'SE1', 'SER1', 'TR1', 'TR2', 'TS1', 'UKR1', 'UNG1', 'URU1', 'WER1',
-        'ZYP1'
+        'A1', 'AR1N', 'ARG2', 'AZ1', 'BE1', 'BRA1', 'BRA2', 'BU1', 'C1', 'CO2T', 'COL1', 'COLP', 'DK1', 'EC1N',
+        'ES1', 'ES2', 'ES3A', 'ES3B', 'ES3C', 'ES3D', 'FR1', 'FR2', 'GB1', 'GB2', 'GB3', 'GR1', 'ISR1', 'IT1', 'IT2',
+        'KAS1', 'KR1', 'L1', 'L2', 'L3', 'MO1N', 'NL1', 'NL2', 'NO1', 'PL1', 'PO1', 'PO2', 'PT23', 'RO1', 'RU1', 'RU2',
+        'SC1', 'SE1', 'SER1', 'SK2', 'SLO1', 'TR1', 'TR2', 'TS1', 'UKR1', 'UNG1', 'URU1', 'WER1', 'ZYP1'
     ]
-    additional_pages = ["/wettbewerbe/amerika"]
+    additional_pages = ["/wettbewerbe/amerika?ajax=yw1&page=1",
+                        "/wettbewerbe/amerika?ajax=yw1&page=2",
+                        "/wettbewerbe/europa?ajax=yw1&page=10"]
 
     tm = TransferMarkt()
     print("Obtaining leagues and teams...")
